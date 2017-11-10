@@ -1,4 +1,4 @@
-package main;
+package main.ANN;
 
 public class Axon {
 	private double weight;

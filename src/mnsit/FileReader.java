@@ -38,14 +38,15 @@ public class FileReader {
     private static final int IMAGE_OFFSET = 16;
     private static final int IMAGE_SIZE = ROWS * COLUMNS;
 
-    public double[][] inputData;
+    public double[][][][] inputData;
     public double[][] outputData;
+    
     public FileReader(String labelFileName, String imageFileName) {
         this.labelFileName = labelFileName;
         this.imageFileName = imageFileName;
     }
     
-    public double[][] getInputData () {
+    public double[][][][] getInputData () {
     	return inputData;
     }
     
@@ -102,25 +103,25 @@ public class FileReader {
         if(numRows != ROWS && numRows != COLUMNS) {
             throw new IOException("Bad image. Rows and columns do not equal " + ROWS + "x" + COLUMNS);
         }
-        double[][] inputData = new double[numberOfLabels][784];
+        double[][][][] inputData = new double[numberOfLabels][1][28][28];
         double[][] outputData = new double[numberOfLabels][10];
         for(int i = 0; i < numberOfLabels; i++) {
             int label = labelBytes[OFFSET_SIZE + ITEMS_SIZE + i];
-            if (i == 1)
-        		System.out.println(label);
             for (int j = 0; j < 10; j++) {
             	outputData[i][j] = (label == j) ? 1 : 0;
             }
             byte[] imageData = Arrays.copyOfRange(imageBytes, (i * IMAGE_SIZE) + IMAGE_OFFSET, (i * IMAGE_SIZE) + IMAGE_OFFSET + IMAGE_SIZE);	
-            for (int j = 0; j < 784; j++) {
-            	inputData[i][j] = imageData[j];
+            for (int j = 0; j < 28; j++) {
+            	for (int k = 0; k < 28; k++) {
+            		inputData[i][0][j][k] = ((imageData[(j * 28) + k] / 255.0));
+            	}
             }
             //images.add(new DigitImage(label, imageData));
         }
         this.inputData = inputData;
         this.outputData = outputData;
         for (int i = 0 ; i < 10; i++) {
-        	System.out.println(outputData[1][i]);
+        	//System.out.println(outputData[0][i]);
         }
      
 

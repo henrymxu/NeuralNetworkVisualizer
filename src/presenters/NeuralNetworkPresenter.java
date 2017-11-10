@@ -1,13 +1,13 @@
 package presenters;
 
-import main.NeuralNetwork;
+import main.ANN.ArtificialNeuralNetwork;
 import ui.NetworkView;
 
 public class NeuralNetworkPresenter {
 	private NetworkView networkView;
-	private NeuralNetwork neuralNetwork;
+	private ArtificialNeuralNetwork neuralNetwork;
 	
-	public NeuralNetworkPresenter (NetworkView networkView, NeuralNetwork neuralNetwork) {
+	public NeuralNetworkPresenter (NetworkView networkView, ArtificialNeuralNetwork neuralNetwork) {
 		this.networkView = networkView;
 		this.neuralNetwork = neuralNetwork;
 	}
@@ -32,7 +32,7 @@ public class NeuralNetworkPresenter {
 		return neuralNetwork.getLayerAt(layerIndex).getNeuronAt(neuronIndex).getAxonWeight(axonIndex);
 	}
 	
-	public void onNeuralNetworkUpdated (NeuralNetwork neuralNetwork) {
+	public void onNeuralNetworkUpdated (ArtificialNeuralNetwork neuralNetwork) {
 		this.neuralNetwork = neuralNetwork;
 		networkView.updateNetwork();
 	}

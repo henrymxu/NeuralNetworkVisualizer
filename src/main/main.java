@@ -2,6 +2,9 @@ package main;
 
 import java.io.IOException;
 
+import main.ANN.ArtificialNeuralNetwork;
+import main.CNN.BasicConvolutionalNeuralNetwork;
+import main.CNN.ConvolutionalNeuralNetwork;
 import mnsit.FileReader;
 
 public class main {
@@ -14,14 +17,14 @@ public class main {
 	public static double [][] threeXORinputs = new double [][] {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1}, {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
 	public static double [][] threeXORoutputs = new double [][] {{0}, {1}, {1}, {0}, {1}, {0}, {0}, {1}};
 	
-	static int numberOfInputs = 784;
-	static int numberOfOutputs = 10;
+	static int numberOfInputs = 2;
+	static int numberOfOutputs = 1;
 	
 	static int numberOfHiddenLayers = 2;
-	static int numberOfHiddenNodes = 16;
+	static int numberOfHiddenNodes = 3;
 	
 	static double learningRate = 0.5;
-	static int epoch = 2000000000;
+	static int epoch = 1000000;
 	
 	public static void main (String args[]) {
 		FileReader fReader = new FileReader ("C:\\Users\\Henry\\Documents\\Workspace\\NeuralNetworkVisualizer\\src\\mnsit\\train-labels.idx1-ubyte", "C:\\Users\\Henry\\Documents\\Workspace\\NeuralNetworkVisualizer\\src\\mnsit\\train-images.idx3-ubyte");
@@ -31,21 +34,38 @@ public class main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		NeuralNetworkBuilder networkBuilder = new NeuralNetworkBuilder();
-		//networkBuilder.setBiasNode(1);
+		//outputMNIST(fReader.getInputData());
+		
+		/*NeuralNetworkBuilder networkBuilder = new NeuralNetworkBuilder();
+		networkBuilder.setBiasNode(1);
 		networkBuilder.setNumberOfInputs(numberOfInputs);
 		networkBuilder.setNumberOfOutputs(numberOfOutputs);
 		networkBuilder.setHiddenLayers(numberOfHiddenLayers, numberOfHiddenNodes);
 		networkBuilder.setLearningRate(learningRate);
 		networkBuilder.setEpoch(epoch);
 		
-		NeuralNetwork neuralNetwork = networkBuilder.build();
-		neuralNetwork.setTrainingSamples(fReader.getInputData());
-		neuralNetwork.setExpectedOutputs(fReader.getOutputData());
+		ArtificialNeuralNetwork neuralNetwork = networkBuilder.build();
+		neuralNetwork.setTrainingSamples(XORinputs);
+		neuralNetwork.setExpectedOutputs(XORoutputs);
 		
 		neuralNetwork.trainNetwork();
 		neuralNetwork.verifyOutputs();
 		
-		neuralNetwork.classifyInput(fReader.getInputData()[1]);
+		neuralNetwork.classifyInput(XORinputs[1]);*/
+		
+		ConvolutionalNeuralNetwork network = new BasicConvolutionalNeuralNetwork ();
+		network.setTrainingSamples(fReader.getInputData());
+		network.setExpectedOutputs(fReader.getOutputData());
+		network.setNumberOfOutputs(10);
+		network.trainNetwork();
+	}
+	
+	public static void outputMNIST (double[][][][] inputs) {
+		for (int i = 0; i < inputs[0][0].length; i++) {
+			for (int j = 0; j < inputs[0][0][0].length; j++) {
+				System.out.print(inputs[0][0][i][j] + "\t");
+			}
+			System.out.println ("");
+		}
 	}
 }

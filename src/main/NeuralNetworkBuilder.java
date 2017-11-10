@@ -1,5 +1,8 @@
 package main;
 
+import main.ANN.ArtificialNeuralNetwork;
+import main.ANN.BasicArtificialNeuralNetwork;
+
 public class NeuralNetworkBuilder {
 	private int numberOfInputs;
 	private int numberOfOutputs;
@@ -38,8 +41,8 @@ public class NeuralNetworkBuilder {
 		this.epoch = epoch;
 	}
 	
-	public NeuralNetwork build () {
-		NeuralNetwork neuralNetwork = new BasicNeuralNetwork ();
+	public ArtificialNeuralNetwork build () {
+		ArtificialNeuralNetwork neuralNetwork = new BasicArtificialNeuralNetwork ();
 		
 		neuralNetwork.setBiasState(biasState);
 		neuralNetwork.setNumberOfInputs (numberOfInputs);

@@ -1,10 +1,10 @@
-package main;
+package main.ANN;
 
 public class Neuron {
 	private double sum = 0;
 	private double activationValue;
-	private Axon[] axons;
-	private double[] tempWeights;
+	protected Axon[] axons;
+	protected double[] tempWeights;
 	
 	public Neuron () {
 		

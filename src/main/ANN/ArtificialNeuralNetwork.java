@@ -1,7 +1,7 @@
-package main;
+package main.ANN;
 import java.util.Random;
 
-public abstract class NeuralNetwork {
+public abstract class ArtificialNeuralNetwork {
 	protected double [][] expectedOutputs;
 	protected double [][] trainingInputs;
 	protected Layer[] network;
@@ -12,13 +12,19 @@ public abstract class NeuralNetwork {
 	protected double learningRate;
 	protected int epoch;
 	protected int biasState;
-
-	public NeuralNetwork() {
+	protected boolean isInitiated = false;
+	
+	protected Neuron [] biasNeurons;
+	public ArtificialNeuralNetwork() {
 		super();
 	}
 	
 	public int getSize () {
 		return network.length;
+	}
+	
+	public boolean isInitialized () {
+		return isInitiated;
 	}
 	
 	public Layer getLayerAt (int layerIndex) {
@@ -60,6 +66,7 @@ public abstract class NeuralNetwork {
 
 	private void initLayers() {
 		network = new Layer [2 + numberOfHiddenLayers];
+		biasNeurons = new Neuron [network.length - 1];
 		for (int i = 0; i < network.length; i++) {
 			int numberOfNodes = 0;
 			if (i == 0) {
@@ -82,6 +89,7 @@ public abstract class NeuralNetwork {
 					network[i].setNeuronAt(j, new Neuron());
 				} else {
 					network[i].setNeuronAt(j, new Neuron(network[i + 1].getSize()));
+					biasNeurons[i] = new BiasNeuron(network[i + 1].getSize());
 				}
 			}
 		}
@@ -89,11 +97,13 @@ public abstract class NeuralNetwork {
 
 	private void initAxons() {
 		Random r = new Random();
-		for (Layer layer : network) {
-			for (Neuron neuron : layer.getNeurons()) {
-				for (int i = 0; i < neuron.getNumberOfAxons(); i++) {
+		for (int i = 0; i < network.length; i++) {
+			for (Neuron neuron : network[i].getNeurons()) {
+				for (int j = 0; j < neuron.getNumberOfAxons(); j++) {
 					int random = r.nextInt(100);
-					neuron.setAxonWeight(i, random/100.00);
+					neuron.setAxonWeight(j, random / 100.00);
+					double bias = r.nextGaussian();
+					biasNeurons[i].setAxonWeight(j, bias);
 				}
 			}
 		}
@@ -103,6 +113,7 @@ public abstract class NeuralNetwork {
 		initLayers();
 		initNeurons();
 		initAxons();
+		isInitiated = true;
 	}
 
 	protected void setInputs(double[] inputs) {
@@ -111,9 +122,9 @@ public abstract class NeuralNetwork {
 		}
 	}
 	
-	protected abstract void forwardPropogate();
+	protected abstract void forwardPropagate();
 	
-	protected abstract void backPropogate(double[] expectedOutputs);
+	protected abstract void backPropagate(double[] expectedOutputs);
 	
 	public abstract void trainNetwork();
 	
@@ -126,22 +137,21 @@ public abstract class NeuralNetwork {
 	public void verifyOutputs() {
 		for (int i = 0; i < trainingInputs.length; i++) {
 			setInputs (trainingInputs[i]);
-			forwardPropogate();
-			//System.out.println (this.toString());
+			forwardPropagate();
 		}
 	}
 
 	public double[] classifyInput(double[] input) {
 		setInputs (input);
-		forwardPropogate();
+		forwardPropagate();
 		return this.getOutputs();
 	}
 	
-	private double[] getOutputs() {
+	protected double[] getOutputs() {
 		double[] output = new double[numberOfOutputs];
 		for (int i = 0; i < numberOfOutputs; i++) {
 			output [i] = network[network.length - 1].getNeuronAt(i).getActivation();
-			System.out.println(output[i]);
+			//System.out.println(output[i]);
 		}
 		return output;
 	}
